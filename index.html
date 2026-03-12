@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>OptiVision</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#f8fafc;color:#1e293b}
+.app{display:flex;height:100vh;overflow:hidden}
+/* Sidebar */
+.sidebar{width:220px;background:linear-gradient(180deg,#0f172a,#1e293b);display:flex;flex-direction:column;flex-shrink:0}
+.logo{display:flex;align-items:center;gap:10px;padding:16px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.logo-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.logo-text{font-weight:700;color:#fff;font-size:13px}
+.logo-sub{font-size:11px;color:#475569}
+nav{flex:1;padding:8px;overflow-y:auto}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;cursor:pointer;font-size:13px;font-weight:500;color:#94a3b8;border:none;background:none;width:100%;text-align:left;font-family:inherit;transition:all .15s}
+.nav-item:hover{color:#fff;background:rgba(255,255,255,.08)}
+.nav-item.active{background:#2563eb;color:#fff;box-shadow:0 4px 12px rgba(37,99,235,.3)}
+.nav-icon{font-size:16px;flex-shrink:0}
+.sidebar-bottom{padding:8px;border-top:1px solid rgba(255,255,255,.06)}
+.user-info{padding:8px 10px;margin-bottom:4px}
+.user-name{font-size:12px;font-weight:600;color:#fff}
+.user-role{font-size:11px;color:#475569}
+/* Main */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{height:54px;background:#fff;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;padding:0 24px;gap:12}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.content{flex:1;overflow-y:auto;padding:24px}
+/* Cards */
+.card{background:#fff;border-radius:16px;border:1px solid #f1f5f9;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;font-weight:600;border-radius:10px;cursor:pointer;border:none;font-family:inherit;white-space:nowrap;transition:all .15s}
+.btn-primary{background:#2563eb;color:#fff;padding:9px 18px;font-size:13px}
+.btn-primary:hover{background:#1d4ed8}
+.btn-secondary{background:#fff;color:#475569;border:1px solid #e2e8f0;padding:9px 18px;font-size:13px}
+.btn-secondary:hover{background:#f8fafc}
+.btn-success{background:#059669;color:#fff;padding:8px 14px;font-size:13px}
+.btn-danger{background:#fef2f2;color:#dc2626;border:1px solid #fecaca;padding:6px 12px;font-size:12px}
+.btn-sm{padding:6px 12px;font-size:12px;border-radius:8px}
+.btn-xs{padding:4px 10px;font-size:11px;border-radius:6px}
+/* Form */
+.field-label{display:block;font-size:11px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.field-input,.field-select{width:100%;padding:10px 12px;font-size:13px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;outline:none;font-family:inherit;color:#1e293b;transition:border .15s}
+.field-input:focus,.field-select:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+/* Badge */
+.badge{display:inline-flex;align-items:center;padding:2px 10px;border-radius:999px;font-size:11px;font-weight:600}
+.badge-blue{background:#eff6ff;color:#1d4ed8}
+.badge-green{background:#f0fdf4;color:#15803d}
+.badge-yellow{background:#fffbeb;color:#b45309}
+.badge-red{background:#fef2f2;color:#dc2626}
+.badge-gray{background:#f1f5f9;color:#475569}
+.badge-orange{background:#fff7ed;color:#c2410c}
+.badge-teal{background:#f0fdfa;color:#0f766e}
+/* Table */
+.tbl{width:100%;font-size:13px;border-collapse:collapse}
+.tbl th{padding:10px 16px;text-align:left;font-size:11px;font-weight:600;color:#64748b;text-transform:uppercase;background:#f8fafc;border-bottom:1px solid #f1f5f9;white-space:nowrap}
+.tbl td{padding:12px 16px;color:#475569;border-bottom:1px solid #f8fafc}
+.tbl tr:last-child td{border:0}
+.tbl tbody tr:hover td{background:#f8fafc;cursor:pointer}
+/* Page header */
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:24px}
+.page-title{font-size:22px;font-weight:800;color:#0f172a}
+.page-sub{font-size:13px;color:#94a3b8;margin-top:2px}
+/* Stat */
+.stat{background:#fff;border-radius:16px;border:1px solid #f1f5f9;padding:20px}
+.stat-icon{font-size:28px;margin-bottom:10px}
+.stat-val{font-size:26px;font-weight:800;color:#0f172a}
+.stat-label{font-size:13px;color:#94a3b8;margin-top:3px}
+/* Grid */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px}
+/* Modal */
+.overlay{position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:50;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)}
+.modal{background:#fff;border-radius:16px;box-shadow:0 25px 50px rgba(0,0,0,.15);width:100%;max-width:520px;max-height:90vh;display:flex;flex-direction:column}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid #f1f5f9}
+.modal-title{font-weight:700;font-size:15px;color:#0f172a}
+.modal-body{padding:24px;overflow-y:auto;flex:1}
+.modal-foot{display:flex;justify-content:flex-end;gap:10px;padding:16px 24px;border-top:1px solid #f1f5f9;background:#f8fafc;border-radius:0 0 16px 16px}
+/* Tabs */
+.tabs{display:flex;gap:4px;background:#f1f5f9;border-radius:12px;padding:4px;width:fit-content;margin-bottom:16px}
+.tab{padding:6px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:none;font-family:inherit;color:#64748b;transition:all .15s}
+.tab.active{background:#fff;color:#0f172a;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+/* Login */
+.login-wrap{min-height:100vh;display:flex;background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 50%,#0f172a 100%)}
+.login-box{width:100%;max-width:420px;margin:auto;padding:24px}
+.login-card{border-radius:20px;padding:32px;background:rgba(255,255,255,0.06);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.1)}
+.login-input{width:100%;padding:12px 16px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:12px;color:#fff;font-size:13px;outline:none;font-family:inherit}
+.login-input:focus{border-color:#3b82f6}
+.login-btn{width:100%;padding:12px;border-radius:12px;font-weight:700;font-size:14px;color:#fff;border:none;cursor:pointer;background:linear-gradient(135deg,#3b82f6,#1d4ed8);font-family:inherit;box-shadow:0 8px 20px rgba(37,99,235,.35);display:flex;align-items:center;justify-content:center;gap:8px}
+.demo-btn{text-align:left;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);cursor:pointer;font-family:inherit;flex:1}
+/* Misc */
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;color:#94a3b8}
+.empty-icon{font-size:48px;margin-bottom:12px}
+.spinner{width:28px;height:28px;border:3px solid #e2e8f0;border-top-color:#2563eb;border-radius:50%;animation:spin .8s linear infinite;display:inline-block}
+.search-input{padding:10px 16px 10px 40px;border:1px solid #e2e8f0;border-radius:12px;font-size:13px;outline:none;font-family:inherit;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%2394a3b8' stroke-width='2' viewBox='0 0 24 24'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") 12px center no-repeat;width:320px}
+.search-input:focus{border-color:#2563eb}
+.toast-wrap{position:fixed;top:16px;right:16px;z-index:999;display:flex;flex-direction:column;gap:8px}
+.toast{background:#fff;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.15);padding:12px 16px;font-size:13px;font-weight:500;display:flex;align-items:center;gap:8px;border:1px solid #f1f5f9;min-width:240px;animation:slideIn .25s ease}
+.progress-bar{display:flex;align-items:flex-start;gap:0}
+.prog-step{display:flex;align-items:center;flex:1}
+.prog-circle{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.prog-line{flex:1;height:2px;margin:0 4px}
+.prog-label{font-size:10px;font-weight:600;text-align:center;margin-top:6px;line-height:1.3}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes slideIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:768px){.sidebar{width:60px}.logo-text,.logo-sub,.nav-item span:last-child,.user-name,.user-role{display:none}.g4{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="toast-wrap" id="toasts"></div>
+
+<script>
+// ── Config ──────────────────────────────────────────
+const API = (window.API_URL||'http://localhost:5000') + '/api';
+let authToken = localStorage.getItem('ov_token');
+let authUser  = JSON.parse(localStorage.getItem('ov_user')||'null');
+let currentPage = 'dashboard';
+let currentId   = null;
+
+// ── HTTP ─────────────────────────────────────────────
+async function req(method, path, body) {
+  const headers = {'Content-Type':'application/json'};
+  if (authToken) headers['Authorization'] = 'Bearer ' + authToken;
+  const res = await fetch(API + path, {method, headers, body: body ? JSON.stringify(body) : undefined});
+  if (res.status === 401) { doLogout(); return; }
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Error');
+  return data;
+}
+const get  = p      => req('GET',    p);
+const post = (p, b) => req('POST',   p, b);
+const put  = (p, b) => req('PUT',    p, b);
+const patch= (p, b) => req('PATCH',  p, b);
+const del  = p      => req('DELETE', p);
+
+// ── Toast ─────────────────────────────────────────────
+function toast(msg, type='success') {
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.innerHTML = `<span>${type==='success'?'✅':'❌'}</span><span>${msg}</span>`;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(() => el.remove(), 3000);
+}
+
+// ── Helpers ──────────────────────────────────────────
+const fmt  = n => '₹' + Number(n||0).toLocaleString('en-IN');
+const fmtD = d => d ? new Date(d).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) : '—';
+const escH = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+function statusBadge(s) {
+  const map = {
+    CREATED:'badge-gray',LENS_ORDERED:'badge-blue',GRINDING:'badge-yellow',
+    FITTING:'badge-orange',READY:'badge-teal',DELIVERED:'badge-green',
+    CANCELLED:'badge-red',PENDING:'badge-yellow',PARTIAL:'badge-orange',PAID:'badge-green'
+  };
+  const label = s ? s.replace(/_/g,' ') : '';
+  return `<span class="badge ${map[s]||'badge-gray'}">${label}</span>`;
+}
+
+// ── Router ────────────────────────────────────────────
+function navigate(page, id) {
+  currentPage = page;
+  currentId   = id || null;
+  render();
+}
+
+// ── Auth ──────────────────────────────────────────────
+async function doLogin(email, password) {
+  const data = await post('/auth/login', {email, password});
+  authToken = data.token;
+  authUser  = data.user;
+  localStorage.setItem('ov_token', authToken);
+  localStorage.setItem('ov_user',  JSON.stringify(authUser));
+  toast('Welcome back, ' + authUser.name.split(' ')[0] + '!');
+  navigate('dashboard');
+}
+function doLogout() {
+  authToken = null; authUser = null;
+  localStorage.clear();
+  render();
+}
+
+// ── Sidebar ───────────────────────────────────────────
+const NAV = [
+  ['dashboard','📊','Dashboard'],
+  ['customers','👥','Customers'],
+  ['frames','👓','Frames'],
+  ['lenses','🔬','Lenses'],
+  ['orders','📋','Orders'],
+  ['billing','🧾','Billing / POS'],
+  ['inventory','📦','Inventory'],
+  ['reports','📈','Reports'],
+  ['settings','⚙️','Settings'],
+];
+function renderSidebar() {
+  return `
+  <div class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">👁</div>
+      <div><div class="logo-text">OptiVision</div><div class="logo-sub">Management Suite</div></div>
+    </div>
+    <nav>
+      ${NAV.map(([p,i,l])=>`<button class="nav-item ${currentPage===p?'active':''}" onclick="navigate('${p}')">
+        <span class="nav-icon">${i}</span><span>${escH(l)}</span>
+      </button>`).join('')}
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="user-info">
+        <div class="user-name">${escH(authUser?.name||'')}</div>
+        <div class="user-role">${escH((authUser?.role||'').replace('_',' '))}</div>
+      </div>
+      <button class="nav-item" onclick="doLogout()" style="color:#f87171">🚪 <span>Sign Out</span></button>
+    </div>
+  </div>`;
+}
+
+// ── Login Page ────────────────────────────────────────
+function renderLogin() {
+  document.getElementById('app').innerHTML = `
+  <div class="login-wrap">
+    <div class="login-box">
+      <div class="login-card">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px">
+          <div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);display:flex;align-items:center;justify-content:center;font-size:22px">👁</div>
+          <div><div style="font-weight:800;color:#fff;font-size:18px">OptiVision</div><div style="font-size:12px;color:#64748b">Optical Shop Management</div></div>
+        </div>
+        <h2 style="color:#fff;font-size:22px;font-weight:800;margin-bottom:4px">Sign in</h2>
+        <p style="color:#64748b;font-size:13px;margin-bottom:24px">Welcome back</p>
+        <div id="login-err" style="display:none;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#fca5a5;border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:16px"></div>
+        <div style="margin-bottom:14px">
+          <label class="field-label" style="color:#64748b">Email</label>
+          <input class="login-input" id="li-email" type="email" value="admin@optivision.in" placeholder="email@example.com"/>
+        </div>
+        <div style="margin-bottom:16px">
+          <label class="field-label" style="color:#64748b">Password</label>
+          <input class="login-input" id="li-pw" type="password" value="Admin@123" placeholder="••••••••"/>
+        </div>
+        <button class="login-btn" id="login-btn" onclick="handleLogin()">Sign In →</button>
+        <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08)">
+          <div style="font-size:12px;color:#475569;text-align:center;margin-bottom:10px;font-weight:500">Demo credentials</div>
+          <div style="display:flex;gap:8px">
+            <button class="demo-btn" onclick="document.getElementById('li-email').value='admin@optivision.in';document.getElementById('li-pw').value='Admin@123'">
+              <div style="font-size:12px;font-weight:600;color:#cbd5e1">Admin</div>
+              <div style="font-size:11px;color:#475569">admin@optivision.in</div>
+            </button>
+            <button class="demo-btn" onclick="document.getElementById('li-email').value='priya@optivision.in';document.getElementById('li-pw').value='Staff@123'">
+              <div style="font-size:12px;font-weight:600;color:#cbd5e1">Staff</div>
+              <div style="font-size:11px;color:#475569">priya@optivision.in</div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+async function handleLogin() {
+  const email = document.getElementById('li-email').value;
+  const pw    = document.getElementById('li-pw').value;
+  const btn   = document.getElementById('login-btn');
+  const err   = document.getElementById('login-err');
+  btn.textContent = '⏳ Signing in…'; btn.disabled = true;
+  err.style.display = 'none';
+  try { await doLogin(email, pw); }
+  catch(e) { err.textContent = e.message || 'Invalid credentials'; err.style.display = 'block'; btn.textContent = 'Sign In →'; btn.disabled = false; }
+}
+
+// ── Shell ─────────────────────────────────────────────
+function renderShell(pageHtml) {
+  document.getElementById('app').innerHTML = `
+  <div class="app">
+    ${renderSidebar()}
+    <div class="main">
+      <div class="topbar">
+        <span style="font-size:13px;color:#94a3b8">OptiVision</span>
+        <div class="topbar-right">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#8b5cf6);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:13px">${(authUser?.name||'?')[0]}</div>
+            <span style="font-size:13px">Hi, <b>${escH(authUser?.name?.split(' ')[0]||'')}</b></span>
+          </div>
+        </div>
+      </div>
+      <div class="content" id="page-content">${pageHtml}</div>
+    </div>
+  </div>`;
+}
+
+// ── Dashboard ─────────────────────────────────────────
+async function renderDashboard() {
+  renderShell('<div style="display:flex;justify-content:center;padding:60px"><div class="spinner"></div></div>');
+  try {
+    const d = (await get('/dashboard')).data;
+    const { stats={}, weekSales=[], topFrames=[], lowStock=[], recentOrders=[] } = d;
+    document.getElementById('page-content').innerHTML = `
+      <div class="page-header">
+        <div><div class="page-title">Dashboard</div><div class="page-sub">${new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</div></div>
+        <button class="btn btn-primary" onclick="navigate('orders','new')">+ New Order</button>
+      </div>
+      <div class="g4" style="margin-bottom:20px">
+        ${[["💰","Today's Revenue",fmt(stats.todayRevenue),`${stats.todayOrders||0} orders`],["⏳","Pending Orders",stats.pendingOrders||0,"Needs attention"],["👥","Customers",stats.totalCustomers||0,"All time"],["📈","Month Revenue",fmt(stats.monthRevenue),"This month"]].map(([i,l,v,s])=>`
+        <div class="stat"><div class="stat-icon">${i}</div><div class="stat-val">${v}</div><div class="stat-label">${l}</div><div style="font-size:12px;color:#10b981;margin-top:4px;font-weight:600">${s}</div></div>`).join('')}
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+        <div class="card" style="padding:20px">
+          <div style="font-weight:700;font-size:14px;margin-bottom:14px">🏆 Top Frames</div>
+          ${topFrames.length===0?'<div style="text-align:center;color:#94a3b8;font-size:13px;padding:20px">No data</div>':topFrames.map((f,i)=>`
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+            <div style="width:24px;height:24px;border-radius:8px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#64748b;flex-shrink:0">${i+1}</div>
+            <div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escH(f.brand)} ${escH(f.model||'')}</div><div style="font-size:11px;color:#94a3b8">${f.unitsSold} sold</div></div>
+            <div style="font-size:12px;font-weight:700">${fmt(f.revenue)}</div>
+          </div>`).join('')}
+        </div>
+        <div class="card" style="padding:20px">
+          <div style="font-weight:700;font-size:14px;margin-bottom:14px">⚠️ Low Stock ${lowStock.length>0?`<span class="badge badge-red" style="margin-left:8px">${lowStock.length}</span>`:''}</div>
+          ${lowStock.length===0?'<div style="text-align:center;padding:20px"><div style="font-size:32px">✅</div><div style="font-size:13px;color:#64748b;margin-top:8px">All stocked!</div></div>':lowStock.map(f=>`
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+            <span>${f.stockQty===0?'🔴':'🟡'}</span>
+            <div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escH(f.brand)} ${escH(f.model||'')}</div></div>
+            <span class="badge ${f.stockQty===0?'badge-red':'badge-yellow'}">${f.stockQty===0?'OOS':f.stockQty}</span>
+          </div>`).join('')}
+        </div>
+        <div class="card" style="padding:20px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+            <div style="font-weight:700;font-size:14px">Recent Orders</div>
+            <button class="btn btn-sm btn-secondary" onclick="navigate('orders')">All →</button>
+          </div>
+          ${recentOrders.map(o=>`
+          <div onclick="navigate('orders','${o.id}')" style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;cursor:pointer;margin-bottom:4px" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''">
+            <div style="width:32px;height:32px;border-radius:50%;background:#eff6ff;color:#2563eb;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0">${(o.customer?.name||'?')[0]}</div>
+            <div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escH(o.customer?.name||'')}</div><div style="font-size:11px;color:#94a3b8;font-family:monospace">${o.orderNumber}</div></div>
+            ${statusBadge(o.status)}
+          </div>`).join('')}
+        </div>
+      </div>`;
+  } catch(e) { document.getElementById('page-content').innerHTML = `<div style="text-align:center;color:#ef4444;padding:60px">❌ Backend not connected<br><small style="color:#94a3b8">Start backend server at localhost:5000</small></div>`; }
+}
+
+// ── Customers ─────────────────────────────────────────
+async function renderCustomers() {
+  renderShell(`
+    <div class="page-header"><div><div class="page-title">Customers</div></div><button class="btn btn-primary" onclick="showAddCustomer()">+ Add Customer</button></div>
+    <input class="search-input" id="cust-search" placeholder="Search name, phone…" oninput="loadCustomers(this.value)" style="margin-bottom:16px"/>
+    <div id="cust-grid"><div style="display:flex;justify-content:center;padding:60px"><div class="spinner"></div></div></div>
+    <div id="add-cust-modal"></div>`);
+  loadCustomers('');
+}
+
+async function loadCustomers(q) {
+  try {
+    const data = (await get(`/customers?search=${encodeURIComponent(q)}&limit=60`)).data;
+    document.getElementById('cust-grid').innerHTML = data.length===0
+      ? `<div class="card"><div class="empty"><div class="empty-icon">👥</div><div>No customers found</div></div></div>`
+      : `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px">${data.map(c=>`
+        <div class="card" style="padding:20px;cursor:pointer" onclick="navigate('customer-detail','${c.id}')" onmouseover="this.style.boxShadow='0 4px 20px rgba(37,99,235,.12)'" onmouseout="this.style.boxShadow=''">
+          <div style="display:flex;justify-content:space-between;margin-bottom:12px">
+            <div style="width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);color:#fff;font-weight:700;font-size:18px;display:flex;align-items:center;justify-content:center">${c.name[0]}</div>
+            ${c._count?.prescriptions>0?'<span class="badge badge-blue">👁 Rx</span>':''}
+          </div>
+          <div style="font-weight:700;font-size:14px;color:#0f172a;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escH(c.name)}</div>
+          ${c.gender&&c.age?`<div style="font-size:12px;color:#94a3b8;margin-bottom:6px">${c.gender} · ${c.age} yrs</div>`:''}
+          <div style="font-size:12px;color:#64748b">📱 ${escH(c.phone)}</div>
+          <div style="margin-top:10px;padding-top:10px;border-top:1px solid #f1f5f9;display:flex;justify-content:space-between;font-size:12px;color:#94a3b8">
+            <span>📋 ${c._count?.orders||0} orders</span><span style="color:#2563eb;font-weight:600">View →</span>
+          </div>
+        </div>`).join('')}</div>`;
+  } catch{ document.getElementById('cust-grid').innerHTML = '<div class="card"><div class="empty"><div>Failed to load</div></div></div>'; }
+}
+
+function showAddCustomer() {
+  document.getElementById('add-cust-modal').innerHTML = `
+  <div class="overlay" onclick="if(event.target===this)this.remove()">
+    <div class="modal">
+      <div class="modal-head"><div class="modal-title">Add Customer</div><button class="btn btn-sm" onclick="this.closest('.overlay').remove()">✕</button></div>
+      <div class="modal-body">
+        <div class="g2">
+          <div style="grid-column:1/-1"><label class="field-label">Full Name *</label><input class="field-input" id="cn" placeholder="Rajesh Kumar"/></div>
+          <div><label class="field-label">Phone *</label><input class="field-input" id="cp" placeholder="+91-9876543210"/></div>
+          <div><label class="field-label">Email</label><input class="field-input" id="ce" type="email"/></div>
+          <div><label class="field-label">Gender</label><select class="field-select" id="cg"><option value="">Select</option><option value="MALE">Male</option><option value="FEMALE">Female</option><option value="OTHER">Other</option></select></div>
+          <div><label class="field-label">Age</label><input class="field-input" id="ca" type="number"/></div>
+          <div style="grid-column:1/-1"><label class="field-label">Address</label><input class="field-input" id="caddr" placeholder="City, State"/></div>
+        </div>
+      </div>
+      <div class="modal-foot"><button class="btn btn-secondary" onclick="this.closest('.overlay').remove()">Cancel</button><button class="btn btn-primary" onclick="saveCustomer()">Save</button></div>
+    </div>
+  </div>`;
+}
+
+async function saveCustomer() {
+  const name=document.getElementById('cn').value, phone=document.getElementById('cp').value;
+  if (!name||!phone) return toast('Name and phone required','error');
+  try {
+    await post('/customers',{name,phone,email:document.getElementById('ce').value,gender:document.getElementById('cg').value,age:document.getElementById('ca').value||null,address:document.getElementById('caddr').value});
+    toast('Customer added!');
+    document.querySelector('.overlay')?.remove();
+    loadCustomers(document.getElementById('cust-search').value||'');
+  } catch(e){ toast(e.message,'error'); }
+}
+
+// ── Customer Detail ────────────────────────────────────
+async function renderCustomerDetail(id) {
+  renderShell('<div style="display:flex;justify-content:center;padding:60px"><div class="spinner"></div></div>');
+  try {
+    const c = (await get('/customers/'+id)).data;
+    document.getElementById('page-content').innerHTML = `
+      <button class="btn btn-secondary btn-sm" onclick="navigate('customers')" style="margin-bottom:20px">← Back</button>
+      <div style="display:grid;grid-template-columns:240px 1fr;gap:16px">
+        <div class="card" style="padding:20px;height:fit-content">
+          <div style="width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);color:#fff;font-weight:700;font-size:24px;display:flex;align-items:center;justify-content:center;margin-bottom:12px">${c.name[0]}</div>
+          <div style="font-weight:700;font-size:16px;color:#0f172a;margin-bottom:2px">${escH(c.name)}</div>
+          ${c.gender?`<div style="font-size:13px;color:#94a3b8;margin-bottom:10px">${c.gender}${c.age?` · ${c.age} yrs`:''}</div>`:''}
+          <div style="font-size:13px;color:#475569;margin-bottom:4px">📱 ${escH(c.phone)}</div>
+          ${c.email?`<div style="font-size:13px;color:#475569;margin-bottom:4px">✉️ ${escH(c.email)}</div>`:''}
+          ${c.address?`<div style="font-size:13px;color:#475569;margin-bottom:12px">📍 ${escH(c.address)}</div>`:''}
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding-top:12px;border-top:1px solid #f1f5f9;text-align:center;margin-bottom:12px">
+            <div><div style="font-weight:700;font-size:18px">${c.orders?.length||0}</div><div style="font-size:12px;color:#94a3b8">Orders</div></div>
+            <div><div style="font-weight:700;font-size:18px">${c.prescriptions?.length||0}</div><div style="font-size:12px;color:#94a3b8">Prescriptions</div></div>
+          </div>
+          <button class="btn btn-primary btn-sm" style="width:100%;justify-content:center" onclick="navigate('orders','new')">+ New Order</button>
+        </div>
+        <div>
+          <div class="card" style="padding:20px;margin-bottom:12px">
+            <div style="font-weight:700;font-size:14px;margin-bottom:12px">Prescriptions</div>
+            ${!c.prescriptions?.length?'<div class="empty"><div class="empty-icon">👓</div><div>No prescriptions</div></div>':c.prescriptions.map((rx,i)=>`
+            <div style="margin-bottom:16px;padding-bottom:16px;${i<c.prescriptions.length-1?'border-bottom:1px solid #f1f5f9':''}">
+              <div style="display:flex;gap:8px;margin-bottom:8px;align-items:center">${i===0?'<span class="badge badge-green">Latest</span>':''}<span class="badge badge-gray">#${c.prescriptions.length-i}</span>${rx.doctorName?`<span style="font-size:12px;color:#64748b">Dr. ${escH(rx.doctorName)}</span>`:''}</div>
+              <table style="width:100%;font-size:12px;border-collapse:collapse;border:1px solid #f1f5f9;border-radius:8px;overflow:hidden">
+                <thead><tr style="background:#eff6ff"><th style="padding:6px 12px;text-align:left;color:#64748b">Field</th><th style="padding:6px 12px;text-align:center;color:#1d4ed8">Right (OD)</th><th style="padding:6px 12px;text-align:center;color:#1d4ed8;border-left:1px solid #dbeafe">Left (OS)</th></tr></thead>
+                <tbody>
+                  ${[['SPH','rightSph','leftSph'],['CYL','rightCyl','leftCyl'],['AXIS','rightAxis','leftAxis'],['ADD','rightAdd','leftAdd'],['PD','rightPd','leftPd']].map(([l,r,le])=>`
+                  <tr style="border-top:1px solid #f1f5f9"><td style="padding:6px 12px;background:#f8fafc;font-weight:600;color:#64748b">${l}</td><td style="padding:6px 12px;text-align:center;font-family:monospace">${rx[r]??rx.pd??'—'}</td><td style="padding:6px 12px;text-align:center;font-family:monospace;border-left:1px solid #f1f5f9">${rx[le]??rx.pd??'—'}</td></tr>`).join('')}
+                </tbody>
+              </table>
+            </div>`).join('')}
+          </div>
+          <div class="card" style="overflow:hidden">
+            <div style="padding:14px 20px;border-bottom:1px solid #f1f5f9;font-weight:700;font-size:14px">Order History</div>
+            ${!c.orders?.length?'<div class="empty"><div class="empty-icon">📋</div><div>No orders</div></div>':`
+            <table class="tbl"><thead><tr><th>Order #</th><th>Date</th><th>Amount</th><th>Status</th></tr></thead><tbody>
+              ${c.orders.map(o=>`<tr onclick="navigate('orders','${o.id}')"><td style="font-family:monospace;color:#2563eb;font-weight:600;font-size:12px">${o.orderNumber}</td><td style="font-size:12px;color:#94a3b8">${fmtD(o.createdAt)}</td><td style="font-weight:600">${fmt(o.totalAmount)}</td><td>${statusBadge(o.status)}</td></tr>`).join('')}
+            </tbody></table>`}
+          </div>
+        </div>
+      </div>`;
+  } catch(e){ document.getElementById('page-content').innerHTML = `<div style="text-align:center;color:#ef4444;padding:60px">Error: ${e.message}</div>`; }
+}
+
+// ── Frames ─────────────────────────────────────────────
+async function renderFrames() {
+  renderShell(`
+    <div class="page-header"><div><div class="page-title">Frames</div></div><button class="btn btn-primary" onclick="showFrameModal()">+ Add Frame</button></div>
+    <input class="search-input" id="fr-search" placeholder="Search brand, model…" oninput="loadFrames(this.value)" style="margin-bottom:16px"/>
+    <div id="frames-table"><div style="display:flex;justify-content:center;padding:60px"><div class="spinner"></div></div></div>
+    <div id="frame-modal"></div>`);
+  loadFrames('');
+}
+
+async function loadFrames(q) {
+  try {
+    const data = (await get(`/frames?search=${encodeURIComponent(q)}&limit=60`)).data;
+    document.getElementById('frames-table').innerHTML = `
+    <div class="card" style="overflow:hidden">
+      <table class="tbl"><thead><tr><th>Code</th><th>Brand / Model</th><th>Shape</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+      ${data.map(f=>`<tr>
+        <td style="font-family:monospace;font-size:11px;color:#94a3b8">${escH(f.frameCode)}</td>
+        <td><div style="font-weight:600;color:#0f172a;font-size:13px">${escH(f.brand)}</div><div style="font-size:11px;color:#94a3b8">${escH(f.model||'')}</div></td>
+        <td style="font-size:12px">${(f.shape||'').replace('_',' ')}</td>
+        <td style="font-weight:600">${fmt(f.sellingPrice)}</td>
+        <td style="font-weight:700;text-align:center">${f.stockQty}</td>
+        <td>${f.stockQty===0?'<span class="badge badge-red">OOS</span>':f.stockQty<=f.lowStockAlert?'<span class="badge badge-yellow">Low</span>':'<span class="badge badge-green">OK</span>'}</td>
+        <td><div style="display:flex;gap:6px"><button class="btn btn-sm btn-secondary" onclick="showFrameModal(${JSON.stringify(f).replace(/"/g,'&quot;')})">Edit</button><button class="btn btn-sm btn-danger" onclick="deleteFrame('${f.id}')">Del</button></div></td>
+      </tr>`).join('')}
+      </tbody></table>
+    </div>`;
+  } catch{ document.getElementById('frames-table').innerHTML = '<div class="card"><div class="empty"><div>Failed to load</div></div></div>'; }
+}
+
+function showFrameModal(f) {
+  const edit = !!f;
+  document.getElementById('frame-modal').innerHTML = `
+  <div class="overlay" onclick="if(event.target===this)this.remove()">
+    <div class="modal" style="max-width:560px">
+      <div class="modal-head"><div class="modal-title">${edit?'Edit':'Add'} Frame</div><button class="btn btn-sm" onclick="this.closest('.overlay').remove()">✕</button></div>
+      <div class="modal-body">
+        <div class="g2">
+          <div><label class="field-label">Brand *</label><input class="field-input" id="fb" value="${escH(f?.brand||'')}" placeholder="Titan, Ray-Ban…"/></div>
+          <div><label class="field-label">Model</label><input class="field-input" id="fm" value="${escH(f?.model||'')}"/></div>
+          <div><label class="field-label">Shape</label><select class="field-select" id="fsh">${['ROUND','OVAL','RECTANGLE','SQUARE','CAT_EYE','AVIATOR','WAYFARER'].map(s=>`<option value="${s}" ${f?.shape===s?'selected':''}>${s.replace('_',' ')}</option>`).join('')}</select></div>
+          <div><label class="field-label">Color</label><input class="field-input" id="fc" value="${escH(f?.color||'')}" placeholder="Black, Gold…"/></div>
+          <div><label class="field-label">Purchase Price ₹</label><input class="field-input" id="fpp" type="number" value="${f?.purchasePrice||''}"/></div>
+          <div><label class="field-label">Selling Price ₹ *</label><input class="field-input" id="fsp" type="number" value="${f?.sellingPrice||''}"/></div>
+          <div><label class="field-label">Stock Qty</label><input class="field-input" id="fsq" type="number" value="${f?.stockQty||''}"/></div>
+          <div><label class="field-label">Low Stock Alert</label><input class="field-input" id="fla" type="number" value="${f?.lowStockAlert||5}"/></div>
+        </div>
+      </div>
+      <div class="modal-foot"><button class="btn btn-secondary" onclick="this.closest('.overlay').remove()">Cancel</button><button class="btn btn-primary" onclick="saveFrame('${f?.id||''}')">Save</button></div>
+    </div>
+  </div>`;
+}
+
+async function saveFrame(id) {
+  const brand=document.getElementById('fb').value, sp=document.getElementById('fsp').value;
+  if (!brand||!sp) return toast('Brand and price required','error');
+  const payload={brand,model:document.getElementById('fm').value,shape:document.getElementById('fsh').value,color:document.getElementById('fc').value,purchasePrice:document.getElementById('fpp').value||null,sellingPrice:sp,stockQty:document.getElementById('fsq').value||0,lowStockAlert:document.getElementById('fla').value||5};
+  try {
+    if(id){ await put('/frames/'+id,payload); toast('Frame updated!'); } else { await post('/frames',payload); toast('Frame added!'); }
+    document.querySelector('.overlay')?.remove();
+    loadFrames(document.getElementById('fr-search').value||'');
+  } catch(e){ toast(e.message,'error'); }
+}
+
+async function deleteFrame(id) {
+  if (!confirm('Delete this frame?')) return;
+  try { await del('/frames/'+id); toast('Deleted'); loadFrames(''); } catch(e){ toast(e.message,'error'); }
+}
+
+// ── Orders ─────────────────────────────────────────────
+async function renderOrders() {
+  renderShell(`
+    <div class="page-header"><div><div class="page-title">Orders</div></div><button class="btn btn-primary" onclick="navigate('orders','new')">+ New Order</button></div>
+    <div style="display:flex;gap:8px;margin-bottom:12px;overflow-x:auto;padding-bottom:4px" id="status-tabs"></div>
+    <input class="search-input" id="ord-search" placeholder="Search order #, customer…" oninput="loadOrders(this.value,window._ordStatus)" style="margin-bottom:12px"/>
+    <div id="orders-table"><div style="display:flex;justify-content:center;padding:60px"><div class="spinner"></div></div></div>`);
+  window._ordStatus = '';
+  const STATUSES = ['','CREATED','LENS_ORDERED','GRINDING','FITTING','READY','DELIVERED','CANCELLED'];
+  document.getElementById('status-tabs').innerHTML = STATUSES.map(s=>`<button class="btn btn-sm ${s===''?'btn-primary':'btn-secondary'}" id="st-${s}" onclick="filterOrders('${s}')">${s||'All'}</button>`).join('');
+  loadOrders('','');
+}
+
+function filterOrders(s) {
+  window._ordStatus = s;
+  document.querySelectorAll('[id^=st-]').forEach(b=>b.className='btn btn-sm btn-secondary');
+  document.getElementById('st-'+s).className='btn btn-sm btn-primary';
+  loadOrders(document.getElementById('ord-search').value||'',s);
+}
+
+const NEXT_STATUS = {CREATED:'LENS_ORDERED',LENS_ORDERED:'GRINDING',GRINDING:'FITTING',FITTING:'READY',READY:'DELIVERED'};
+
+async function loadOrders(q,s) {
+  try {
+    const data = (await get(`/orders?search=${encodeURIComponent(q||'')}&status=${s||''}&limit=40`)).data;
+    document.getElementById('orders-table').innerHTML = data.length===0
+      ? `<div class="card"><div class="empty"><div class="empty-icon">📋</div><div>No orders</div></div></div>`
+      : `<div class="card" style="overflow:hidden"><table class="tbl"><thead><tr><th>Order #</th><th>Customer</th><th>Amount</th><th>Status</th><th>Payment</th><th>Actions</th></tr></thead><tbody>
+      ${data.map(o=>`<tr>
+        <td onclick="navigate('orders','${o.id}')" style="font-family:monospace;color:#2563eb;font-weight:600;font-size:12px;cursor:pointer">${o.orderNumber}</td>
+        <td onclick="navigate('orders','${o.id}')" style="cursor:pointer"><div style="font-weight:600;font-size:13px;color:#0f172a">${escH(o.customer?.name||'')}</div><div style="font-size:11px;color:#94a3b8">${escH(o.customer?.phone||'')}</div></td>
+        <td><div style="font-weight:600">${fmt(o.totalAmount)}</div>${o.balanceAmount>0?`<div style="font-size:11px;color:#ef4444">Due: ${fmt(o.balanceAmount)}</div>`:''}</td>
+        <td>${statusBadge(o.status)}</td>
+        <td>${statusBadge(o.paymentStatus)}</td>
+        <td><div style="display:flex;gap:6px">
+          <button class="btn btn-sm btn-secondary" onclick="navigate('orders','${o.id}')">View</button>
+          ${NEXT_STATUS[o.status]?`<button class="btn btn-sm btn-success" onclick="advanceOrder('${o.id}','${o.status}')">→ ${NEXT_STATUS[o.status].replace('_',' ')}</button>`:''}
+        </div></td>
+      </tr>`).join('')}
+      </tbody></table></div>`;
+  } catch{ document.getElementById('orders-table').innerHTML = '<div class="card"><div class="empty"><div>Failed to load</div></div></div>'; }
+}
+
+async function advanceOrder(id,status) {
+  const next = NEXT_STATUS[status]; if(!next) return;
+  try { await patch('/orders/'+id+'/status',{status:next}); toast('→ '+next.replace('_',' ')); loadOrders('',window._ordStatus||''); } catch(e){ toast(e.message,'error'); }
+}
+
+// ── Order Detail ───────────────────────────────────────
+async function renderOrderDetail(id) {
+  renderShell('<div style="display:flex;justify-content:center;padding:60px"><div class="spinner"></div></div>');
+  try {
+    const o = (await get('/orders/'+id)).data;
+    const STATUS_FLOW = ['CREATED','LENS_ORDERED','GRINDING','FITTING','READY','DELIVERED'];
+    const curIdx = STATUS_FLOW.indexOf(o.status);
+    document.getElementById('page-content').innerHTML = `
+      <button class="btn btn-secondary btn-sm" onclick="navigate('orders')" style="margin-bottom:20px">← Back to Orders</button>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px">
+            <span style="font-family:monospace;font-weight:700;font-size:20px;color:#2563eb">${o.orderNumber}</span>
+            ${statusBadge(o.status)} ${statusBadge(o.paymentStatus)}
+          </div>
+          <div style="font-size:13px;color:#94a3b8">${fmtD(o.createdAt)} · ${escH(o.staff?.name||'')}</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          ${o.balanceAmount>0?`<button class="btn btn-success" onclick="showPayModal('${id}',${o.balanceAmount})">💳 Collect ${fmt(o.balanceAmount)}</button>`:''}
+          ${NEXT_STATUS[o.status]?`<button class="btn btn-primary" onclick="advanceAndReload('${id}','${o.status}')">→ ${NEXT_STATUS[o.status].replace('_',' ')}</button>`:''}
+        </div>
+      </div>
+      ${o.status!=='CANCELLED'?`
+      <div class="card" style="padding:20px;margin-bottom:16px">
+        <div style="font-weight:700;font-size:13px;margin-bottom:16px">Order Progress</div>
+        <div style="display:flex;align-items:flex-start">
+          ${STATUS_FLOW.map((s,i)=>`
+          <div style="display:flex;align-items:center;flex:1">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+              <div style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;background:${i<curIdx?'#10b981':i===curIdx?'#2563eb':'#f1f5f9'};color:${i<=curIdx?'#fff':'#94a3b8'};${i===curIdx?'box-shadow:0 0 0 4px rgba(37,99,235,0.2)':''}">${i<curIdx?'✓':i+1}</div>
+              <div style="font-size:10px;font-weight:600;text-align:center;color:${i===curIdx?'#2563eb':i<curIdx?'#10b981':'#94a3b8'};line-height:1.3">${s.replace('_',' ')}</div>
+            </div>
+            ${i<STATUS_FLOW.length-1?`<div style="flex:1;height:2px;margin:0 4px 18px;background:${i<curIdx?'#10b981':'#f1f5f9'}"></div>`:''}
+          </div>`).join('')}
+        </div>
+      </div>`:''}
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px">
+        <div>
+          <div class="card" style="overflow:hidden;margin-bottom:16px">
+            <div style="padding:14px 20px;border-bottom:1px solid #f1f5f9;font-weight:700;font-size:13px">Order Items</div>
+            <table class="tbl"><thead><tr><th>Item</th><th>Qty</th><th style="text-align:right">Unit</th><th style="text-align:right">Total</th></tr></thead><tbody>
+              ${(o.items||[]).map(item=>`<tr><td style="font-weight:600">${escH(item.name)}</td><td>${item.quantity}</td><td style="text-align:right;color:#64748b">${fmt(item.unitPrice)}</td><td style="text-align:right;font-weight:600">${fmt(item.totalPrice)}</td></tr>`).join('')}
+            </tbody></table>
+            <div style="padding:14px 20px;border-top:1px solid #f1f5f9;background:#f8fafc">
+              <div style="display:flex;justify-content:space-between;font-size:13px;color:#64748b;margin-bottom:6px"><span>Subtotal</span><span>${fmt(o.subtotal)}</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;color:#64748b;margin-bottom:6px"><span>GST ${o.taxPct}%</span><span>${fmt(o.taxAmount)}</span></div>
+              <div style="display:flex;justify-content:space-between;font-weight:700;font-size:16px;border-top:1px solid #e2e8f0;padding-top:8px"><span>Total</span><span>${fmt(o.totalAmount)}</span></div>
+              ${o.balanceAmount>0?`<div style="display:flex;justify-content:space-between;font-size:13px;color:#ef4444;font-weight:600;margin-top:4px"><span>Balance Due</span><span>${fmt(o.balanceAmount)}</span></div>`:''}
+            </div>
+          </div>
+          ${(o.payments||[]).length>0?`
+          <div class="card" style="overflow:hidden">
+            <div style="padding:14px 20px;border-bottom:1px solid #f1f5f9;font-weight:700;font-size:13px">Payment History</div>
+            <table class="tbl"><thead><tr><th>Date</th><th>Method</th><th style="text-align:right">Amount</th></tr></thead><tbody>
+              ${o.payments.map(p=>`<tr><td style="font-size:12px;color:#94a3b8">${fmtD(p.paidAt)}</td><td><span class="badge badge-blue">${p.method}</span></td><td style="text-align:right;font-weight:600;color:#10b981">${fmt(p.amount)}</td></tr>`).join('')}
+            </tbody></table>
+          </div>`:''}
+        </div>
+        <div>
+          <div class="card" style="padding:20px;margin-bottom:12px">
+            <div style="font-weight:700;font-size:13px;margin-bottom:12px">Customer</div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#8b5cf6);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:14px">${(o.customer?.name||'?')[0]}</div>
+              <div><div style="font-weight:600;font-size:13px">${escH(o.customer?.name||'')}</div><div style="font-size:12px;color:#94a3b8">${escH(o.customer?.phone||'')}</div></div>
+            </div>
+          </div>
+          <div class="card" style="padding:20px">
+            <div style="font-weight:700;font-size:13px;margin-bottom:12px">Order Info</div>
+            ${[['Payment',o.paymentMethod],['Created',fmtD(o.createdAt)],o.deliveryDate?['Delivery',fmtD(o.deliveryDate)]:null].filter(Boolean).map(([k,v])=>`<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px"><span style="color:#94a3b8">${k}</span><span style="font-weight:500">${escH(String(v))}</span></div>`).join('')}
+            ${o.notes?`<div style="margin-top:8px;background:#fffbeb;border:1px solid #fef3c7;border-radius:10px;padding:8px 12px;font-size:12px;color:#92400e">📝 ${escH(o.notes)}</div>`:''}
+          </div>
+        </div>
+      </div>
+      <div id="pay-modal"></div>`;
+  } catch(e){ document.getElementById('page-content').innerHTML = `<div style="text-align:center;color:#ef4444;padding:60px">Error: ${e.message}</div>`; }
+}
+
+async function advanceAndReload(id, status) {
+  const next = NEXT_STATUS[status]; if(!next) return;
+  try { await patch('/orders/'+id+'/status',{status:next}); toast('→ '+next.replace('_',' ')); renderOrderDetail(id); } catch(e){ toast(e.message,'error'); }
+}
+
+function showPayModal(orderId, balance) {
+  document.getElementById('pay-modal').innerHTML = `
+  <div class="overlay" onclick="if(event.target===this)this.remove()">
+    <div class="modal" style="max-width:420px">
+      <div class="modal-head"><div class="modal-title">Record Payment</div><button class="btn btn-sm" onclick="this.closest('.overlay').remove()">✕</button></div>
+      <div class="modal-body" style="display:flex;flex-direction:column;gap:16px">
+        <div><label class="field-label">Amount ₹</label><input class="field-input" id="pay-amt" type="number" value="${balance}"/></div>
+        <div><label class="field-label">Method</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+            ${['CASH','UPI','CARD'].map(m=>`<button id="pm-${m}" class="btn btn-sm ${m==='CASH'?'btn-primary':'btn-secondary'}" onclick="selectPayMethod('${m}')">${m==='CASH'?'💵':m==='UPI'?'📱':'💳'} ${m}</button>`).join('')}
+          </div>
+        </div>
+        <div><label class="field-label">Note</label><input class="field-input" id="pay-note" placeholder="UPI ref / cheque no."/></div>
+      </div>
+      <div class="modal-foot"><button class="btn btn-secondary" onclick="this.closest('.overlay').remove()">Cancel</button><button class="btn btn-success" onclick="savePayment('${orderId}')">Record Payment</button></div>
+    </div>
+  </div>`;
+  window._payMethod = 'CASH';
+}
+
+function selectPayMethod(m) {
+  window._payMethod = m;
+  ['CASH','UPI','CARD'].forEach(x=>document.getElementById('pm-'+x).className='btn btn-sm '+(x===m?'btn-primary':'btn-secondary'));
+}
+
+async function savePayment(orderId) {
+  const amt = document.getElementById('pay-amt').value;
+  if (!amt) return toast('Enter amount','error');
+  try {
+    await post('/orders/'+orderId+'/payment',{amount:amt,method:window._payMethod||'CASH',note:document.getElementById('pay-note').value});
+    toast('Payment recorded!');
+    document.querySelector('.overlay')?.remove();
+    renderOrderDetail(orderId);
+  } catch(e){ toast(e.message,'error'); }
+}
+
+// ── New Order Wizard ───────────────────────────────────
+let wizState = {step:0,customer:null,frame:null,lens:null,discount:0,advance:0,payMethod:'CASH',delivDate:'',notes:''};
+
+async function renderNewOrder() {
+  wizState = {step:0,customer:null,frame:null,lens:null,discount:0,advance:0,payMethod:'CASH',delivDate:'',notes:''};
+  renderShell(`<button class="btn btn-secondary btn-sm" onclick="navigate('orders')" style="margin-bottom:20px">← Back</button><div id="wizard"></div>`);
+  renderWizard();
+}
+
+function renderWizard() {
+  const STEPS=['Customer','Frame','Lens','Checkout'];
+  const {step,customer,frame,lens,discount,advance,payMethod} = wizState;
+  const fCost=frame?.sellingPrice||0, lCost=lens?lens.sellingPrice*2:0;
+  const sub=fCost+lCost, disc=Math.min(Number(discount)||0,sub), tax=(sub-disc)*.18, total=(sub-disc)+tax, bal=Math.max(0,total-(Number(advance)||0));
+
+  document.getElementById('wizard').innerHTML = `
+  <div style="display:flex;align-items:flex-start;margin-bottom:24px">
+    ${STEPS.map((s,i)=>`
+    <div style="display:flex;align-items:center;flex:1">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <div style="width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;background:${i<step?'#10b981':i===step?'#2563eb':'#f1f5f9'};color:${i<=step?'#fff':'#94a3b8'}">${i<step?'✓':i+1}</div>
+        <div style="font-size:11px;font-weight:600;color:${i===step?'#2563eb':i<step?'#10b981':'#94a3b8'}">${s}</div>
+      </div>
+      ${i<STEPS.length-1?`<div style="flex:1;height:2px;margin:0 8px 18px;background:${i<step?'#10b981':'#f1f5f9'}"></div>`:''}
+    </div>`).join('')}
+  </div>
+  <div class="card" style="padding:24px">
+    <div id="wiz-step-content"></div>
+    <div style="display:flex;justify-content:space-between;margin-top:20px;padding-top:20px;border-top:1px solid #f1f5f9">
+      <button class="btn btn-secondary" onclick="wizBack()">← ${step===0?'Cancel':'Back'}</button>
+      ${step<STEPS.length-1
+        ? `<button class="btn btn-primary" onclick="wizNext()" ${(step===0&&!customer)||(step===1&&!frame)?'disabled':''}>Next →</button>`
+        : `<button class="btn btn-primary" onclick="submitOrder()">✓ Create Order ${fmt(total)}</button>`}
+    </div>
+  </div>`;
+
+  const c = document.getElementById('wiz-step-content');
+  if (step===0) {
+    c.innerHTML = `<div style="font-weight:700;font-size:16px;margin-bottom:16px">Select Customer</div>
+      <input class="search-input" style="width:100%;margin-bottom:12px" placeholder="Search customer…" oninput="wizSearchCust(this.value)" id="wiz-csearch"/>
+      <div id="wiz-custs"></div>
+      ${customer?`<div style="margin-top:12px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px"><span style="font-size:18px">👤</span><div><div style="font-weight:600;font-size:13px;color:#1e40af">${escH(customer.name)}</div><div style="font-size:12px;color:#3b82f6">${escH(customer.phone)}</div></div></div>`:''}`;
+  } else if (step===1) {
+    c.innerHTML = `<div style="font-weight:700;font-size:16px;margin-bottom:16px">Select Frame</div>
+      <input class="search-input" style="width:100%;margin-bottom:12px" placeholder="Search frames…" oninput="wizSearchFrames(this.value)"/>
+      <div id="wiz-frames" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;max-height:320px;overflow-y:auto"></div>`;
+    wizSearchFrames('');
+  } else if (step===2) {
+    c.innerHTML = `<div style="font-weight:700;font-size:16px;margin-bottom:12px">Select Lens (optional)</div>
+      <button class="btn btn-sm ${!lens?'btn-primary':'btn-secondary'}" style="margin-bottom:12px" onclick="wizState.lens=null;renderWizard()">No Lens / Frame Only</button>
+      <div id="wiz-lenses" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;max-height:300px;overflow-y:auto"></div>`;
+    wizLoadLenses();
+  } else {
+    c.innerHTML = `<div style="font-weight:700;font-size:16px;margin-bottom:16px">Checkout</div>
+      <div class="g2">
+        <div style="background:#f8fafc;border-radius:12px;padding:16px">
+          <div style="font-weight:700;font-size:13px;margin-bottom:10px">Summary</div>
+          ${[['Customer',customer?.name],['Frame',`${frame?.brand} ${frame?.model||''}`],lens?['Lens',`${lens.name} ×2`]:null].filter(Boolean).map(([k,v])=>`<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span style="color:#64748b">${k}</span><span style="font-weight:500">${escH(String(v))}</span></div>`).join('')}
+          <hr style="border:none;border-top:1px solid #e2e8f0;margin:10px 0"/>
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:#64748b;margin-bottom:4px"><span>Subtotal</span><span>${fmt(sub)}</span></div>
+          ${disc>0?`<div style="display:flex;justify-content:space-between;font-size:13px;color:#ef4444;margin-bottom:4px"><span>Discount</span><span>−${fmt(disc)}</span></div>`:''}
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:#64748b;margin-bottom:4px"><span>GST 18%</span><span>${fmt(tax)}</span></div>
+          <div style="display:flex;justify-content:space-between;font-weight:700;font-size:16px;border-top:1px solid #e2e8f0;padding-top:8px"><span>Total</span><span>${fmt(total)}</span></div>
+          ${bal>0?`<div style="color:#ef4444;font-size:12px;font-weight:600;margin-top:4px">Balance: ${fmt(bal)}</div>`:''}
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div><label class="field-label">Discount ₹</label><input class="field-input" type="number" value="${discount}" oninput="wizState.discount=this.value;renderWizard()"/></div>
+          <div><label class="field-label">Payment</label>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
+              ${['CASH','UPI','CARD'].map(m=>`<button class="btn btn-xs ${payMethod===m?'btn-primary':'btn-secondary'}" onclick="wizState.payMethod='${m}';renderWizard()">${m}</button>`).join('')}
+            </div>
+          </div>
+          <div><label class="field-label">Advance ₹</label><input class="field-input" type="number" value="${advance}" oninput="wizState.advance=this.value;renderWizard()"/></div>
+          <div><label class="field-label">Delivery Date</label><input class="field-input" type="date" value="${wizState.delivDate}" oninput="wizState.delivDate=this.value"/></div>
+          <div><label class="field-label">Notes</label><textarea class="field-input" rows="2" oninput="wizState.notes=this.value">${escH(wizState.notes)}</textarea></div>
+
+```
+    </div>
+  </div>`;
+```
+
+}
+}
+
+async function wizSearchCust(q) {
+if(!q){document.getElementById(‘wiz-custs’).innerHTML=’’;return;}
+const data=(await get(’/customers?search=’+encodeURIComponent(q)+’&limit=8’)).data;
+document.getElementById(‘wiz-custs’).innerHTML=`<div style="display:flex;flex-direction:column;gap:6px;max-height:250px;overflow-y:auto">${data.map(c=>`
+
+  <div onclick="wizState.customer=${JSON.stringify(c).replace(/"/g,'&quot;')};document.getElementById('wiz-csearch').value='';document.getElementById('wiz-custs').innerHTML='';renderWizard()"
+    style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;border:1px solid ${wizState.customer?.id===c.id?'#2563eb':'#f1f5f9'};cursor:pointer" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''">
+    <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#8b5cf6);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center">${c.name[0]}</div>
+    <div><div style="font-weight:600;font-size:13px">${escH(c.name)}</div><div style="font-size:12px;color:#94a3b8">${escH(c.phone)}</div></div>
+  </div>`).join('')}</div>`;
+}
+
+async function wizSearchFrames(q) {
+const data=(await get(’/frames?search=’+encodeURIComponent(q)+’&limit=12’)).data.filter(f=>f.stockQty>0);
+document.getElementById(‘wiz-frames’).innerHTML=data.map(f=>`
+
+  <div onclick="wizState.frame=${JSON.stringify(f).replace(/"/g,'&quot;')};renderWizard()"
+    style="padding:12px;border-radius:12px;border:2px solid ${wizState.frame?.id===f.id?'#2563eb':'#f1f5f9'};background:${wizState.frame?.id===f.id?'#eff6ff':'#fff'};cursor:pointer;text-align:center">
+    <div style="font-size:28px;margin-bottom:6px">👓</div>
+    <div style="font-weight:700;font-size:12px;color:#0f172a">${escH(f.brand)}</div>
+    <div style="font-size:11px;color:#94a3b8;margin-bottom:4px">${escH(f.model||'')}</div>
+    <div style="font-weight:700;font-size:13px;color:#2563eb">${fmt(f.sellingPrice)}</div>
+  </div>`).join('');
+}
+
+async function wizLoadLenses() {
+const data=(await get(’/lenses’)).data;
+document.getElementById(‘wiz-lenses’).innerHTML=data.map(l=>`
+
+  <div onclick="wizState.lens=${JSON.stringify(l).replace(/"/g,'&quot;')};renderWizard()"
+    style="padding:14px;border-radius:12px;border:2px solid ${wizState.lens?.id===l.id?'#2563eb':'#f1f5f9'};background:${wizState.lens?.id===l.id?'#eff6ff':'#fff'};cursor:pointer">
+    <div style="font-weight:600;font-size:13px;margin-bottom:4px">${escH(l.name)}</div>
+    <div style="font-weight:700;font-size:14px;color:#2563eb">${fmt(l.sellingPrice)} <span style="font-size:11px;color:#94a3b8;font-weight:400">×2</span></div>
+  </div>`).join('');
+}
+
+function wizBack() { if(wizState.step===0) navigate(‘orders’); else { wizState.step–; renderWizard(); } }
+function wizNext() { wizState.step++; renderWizard(); }
+
+async function submitOrder() {
+const {customer,frame,lens,discount,advance,payMethod,delivDate,notes} = wizState;
+if(!customer||!frame) return toast(‘Customer and frame required’,‘error’);
+const fCost=frame.sellingPrice, lCost=lens?lens.sellingPrice*2:0;
+const sub=fCost+lCost, disc=Math.min(Number(discount)||0,sub), tax=(sub-disc)*.18, total=(sub-disc)+tax;
+const items=[{itemType:‘frame’,frameId:frame.id,name:`${frame.brand} ${frame.model||''}`.trim(),quantity:1,unitPrice:frame.sellingPrice,totalPrice:frame.sellingPrice}];
+if(lens) items.push({itemType:‘lens’,lensId:lens.id,name:lens.name,quantity:2,unitPrice:lens.sellingPrice,totalPrice:lens.sellingPrice*2});
+try {
+const r=await post(’/orders’,{customerId:customer.id,items,subtotal:sub,discountAmount:disc,taxAmount:tax,taxPct:18,totalAmount:total,advanceAmount:Number(advance)||0,paymentMethod:payMethod,deliveryDate:delivDate||null,notes});
+toast(`Order ${r.data.orderNumber} created!`);
+navigate(‘orders’,r.data.id);
+} catch(e){ toast(e.message,‘error’); }
+}
+
+// ── Inventory ─────────────────────────────────────────
+async function renderInventory() {
+renderShell(` <div class="page-header"><div><div class="page-title">Inventory</div><div class="page-sub">Stock levels</div></div></div> <div class="tabs"><button class="tab active" id="inv-t-frames" onclick="switchInvTab('frames')">Frames</button><button class="tab" id="inv-t-lenses" onclick="switchInvTab('lenses')">Lenses</button></div> <div id="inv-content"><div style="display:flex;justify-content:center;padding:60px"><div class="spinner"></div></div></div>`);
+loadInventory(‘frames’);
+}
+
+window._invTab = ‘frames’;
+function switchInvTab(t) {
+window._invTab = t;
+document.querySelectorAll(’[id^=inv-t-]’).forEach(b=>b.className=‘tab’);
+document.getElementById(‘inv-t-’+t).className=‘tab active’;
+loadInventory(t);
+}
+
+async function loadInventory(t) {
+try {
+const data = (await get(’/inventory’)).data;
+const items = data[t+‘s’] || data[t] || [];
+document.getElementById(‘inv-content’).innerHTML = ` <div class="card" style="overflow:hidden"> <table class="tbl"><thead><tr>${t==='frames'?'<th>Code</th><th>Brand</th><th>Color</th><th>Price</th><th>Stock</th><th>Status</th>':'<th>Name</th><th>Type</th><th>Index</th><th>Price</th><th>Stock</th>'}</tr></thead><tbody> ${items.map(i=>t==='frames'?`<tr>
+<td style="font-family:monospace;font-size:11px;color:#94a3b8">${escH(i.frameCode)}</td>
+<td><div style="font-weight:600;font-size:13px">${escH(i.brand)}</div><div style="font-size:11px;color:#94a3b8">${escH(i.model||’’)}</div></td>
+<td style="font-size:12px">${escH(i.color||’—’)}</td>
+<td style="font-weight:600">${fmt(i.sellingPrice)}</td>
+<td style="font-weight:700;text-align:center">${i.stockQty}</td>
+<td>${i.stockQty===0?’<span class="badge badge-red">OOS</span>’:i.stockQty<=i.lowStockAlert?’<span class="badge badge-yellow">Low</span>’:’<span class="badge badge-green">OK</span>’}</td>
+</tr>`:`<tr>
+<td style="font-weight:600;font-size:13px">${escH(i.name)}</td>
+<td><span class="badge badge-blue" style="font-size:10px">${(i.lensType||’’).replace(’_’,’ ‘)}</span></td>
+<td style="font-size:12px;color:#64748b">${escH(i.lensIndex||’’)}</td>
+<td style="font-weight:600">${fmt(i.sellingPrice)}</td>
+<td><span class="badge ${i.stockQty<=i.lowStockAlert?'badge-yellow':'badge-green'}">${i.stockQty}</span></td>
+</tr>`).join('')} </tbody></table> </div>`;
+} catch{ document.getElementById(‘inv-content’).innerHTML = ‘<div class="card"><div class="empty"><div>Failed to load</div></div></div>’; }
+}
+
+// ── Reports ────────────────────────────────────────────
+async function renderReports() {
+const d30 = new Date(Date.now()-30*86400000).toISOString().split(‘T’)[0];
+const tod  = new Date().toISOString().split(‘T’)[0];
+renderShell(` <div class="page-header"><div><div class="page-title">Reports & Analytics</div></div></div> <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;align-items:center"> <div style="display:flex;align-items:center;gap:8px"><label style="font-size:12px;font-weight:600;color:#64748b">From</label><input type="date" class="field-input" style="width:150px" id="r-from" value="${d30}" onchange="loadReports()"/></div> <div style="display:flex;align-items:center;gap:8px"><label style="font-size:12px;font-weight:600;color:#64748b">To</label><input type="date" class="field-input" style="width:150px" id="r-to" value="${tod}" onchange="loadReports()"/></div> ${[7,30,90].map(d=>`<button class="btn btn-secondary btn-sm" onclick="setDateRange(${d})">Last ${d}d</button>`).join('')} </div> <div id="rep-stats" style="margin-bottom:20px"></div> <div class="tabs"><button class="tab active" id="rt-frames" onclick="switchRepTab('frames')">Frame Sales</button></div> <div id="rep-content"><div style="display:flex;justify-content:center;padding:60px"><div class="spinner"></div></div></div>`);
+loadReports();
+}
+
+function setDateRange(d) {
+document.getElementById(‘r-from’).value = new Date(Date.now()-d*86400000).toISOString().split(‘T’)[0];
+document.getElementById(‘r-to’).value   = new Date().toISOString().split(‘T’)[0];
+loadReports();
+}
+
+async function loadReports() {
+const from=document.getElementById(‘r-from’).value, to=document.getElementById(‘r-to’).value;
+try {
+const [fr,pr]=await Promise.all([get(`/reports/frames?from=${from}&to=${to}`),get(`/reports/profit?from=${from}&to=${to}`)]);
+const p=pr.data;
+document.getElementById(‘rep-stats’).innerHTML=`<div class="g4"> ${[['💰','Revenue',fmt(p.totalRevenue)],['📈','Gross Profit',fmt(p.grossProfit)],['🏛️','Tax Collected',fmt(p.totalTax)],['🏷️','Discounts',fmt(p.totalDiscounts)]].map(([i,l,v])=>`<div class="stat"><div class="stat-icon">${i}</div><div class="stat-val" style="font-size:20px">${v}</div><div class="stat-label">${l}</div></div>`).join('')} </div>`;
+document.getElementById(‘rep-content’).innerHTML=` <div class="card" style="overflow:hidden"> <table class="tbl"><thead><tr><th>Brand / Model</th><th style="text-align:right">Units</th><th style="text-align:right">Revenue</th><th style="text-align:right">Profit</th><th style="text-align:right">Margin</th></tr></thead><tbody> ${fr.data.slice(0,20).map(f=>`<tr>
+<td><div style="font-weight:600">${escH(f.brand)} ${escH(f.model||’’)}</div></td>
+<td style="text-align:right;font-weight:700">${f.unitsSold}</td>
+<td style="text-align:right;font-weight:600">${fmt(f.revenue)}</td>
+<td style="text-align:right;color:#10b981;font-weight:600">${fmt(f.profit)}</td>
+<td style="text-align:right"><span class="badge badge-green">${f.revenue>0?Math.round(f.profit/f.revenue*100):0}%</span></td>
+</tr>`).join('')} </tbody></table> ${fr.data.length===0?'<div style="text-align:center;padding:40px;color:#94a3b8;font-size:13px">No data for this period</div>':''} </div>`;
+} catch{ document.getElementById(‘rep-content’).innerHTML=’<div class="card"><div class="empty"><div>Failed to load</div></div></div>’; }
+}
+
+// ── Lenses ─────────────────────────────────────────────
+async function renderLenses() {
+renderShell(` <div class="page-header"><div><div class="page-title">Lens Catalog</div></div><button class="btn btn-primary" onclick="showLensModal()">+ Add Lens</button></div> <div id="lenses-grid"><div style="display:flex;justify-content:center;padding:60px"><div class="spinner"></div></div></div> <div id="lens-modal"></div>`);
+loadLenses();
+}
+
+async function loadLenses() {
+try {
+const data=(await get(’/lenses’)).data;
+document.getElementById(‘lenses-grid’).innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px">${data.map(l=>`
+<div class="card" style="padding:20px">
+<div style="display:flex;justify-content:space-between;margin-bottom:10px">
+<span class="badge ${l.lensType==='PROGRESSIVE'?'badge-green':l.lensType==='BIFOCAL'?'badge-blue':'badge-gray'}" style="font-size:10px">${(l.lensType||’’).replace(’_’,’ ‘)}</span>
+<span class="badge badge-gray">${l.lensIndex}</span>
+</div>
+<div style="font-weight:700;font-size:14px;color:#0f172a;margin-bottom:4px">${escH(l.name)}</div>
+${l.brand?`<div style="font-size:12px;color:#94a3b8;margin-bottom:8px">${escH(l.brand)}</div>`:’’}
+<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px">${(l.coating||[]).map(c=>`<span style="font-size:10px;background:#f0fdfa;color:#0f766e;border-radius:999px;padding:2px 8px;font-weight:600">✓ ${escH(c)}</span>`).join(’’)}</div>
+<div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid #f1f5f9;padding-top:10px">
+<div><div style="font-weight:700;font-size:16px">${fmt(l.sellingPrice)}</div><div style="font-size:11px;color:#94a3b8">Stock: ${l.stockQty}</div></div>
+<button class="btn btn-danger btn-xs" onclick="deleteLens('${l.id}')">Del</button>
+</div>
+</div>`).join('')}</div>`;
+} catch{ document.getElementById(‘lenses-grid’).innerHTML=’<div class="card"><div class="empty"><div>Failed to load</div></div></div>’; }
+}
+
+function showLensModal() {
+document.getElementById(‘lens-modal’).innerHTML=`
+
+  <div class="overlay" onclick="if(event.target===this)this.remove()">
+    <div class="modal">
+      <div class="modal-head"><div class="modal-title">Add Lens Package</div><button class="btn btn-sm" onclick="this.closest('.overlay').remove()">✕</button></div>
+      <div class="modal-body" style="display:flex;flex-direction:column;gap:14px">
+        <div><label class="field-label">Name *</label><input class="field-input" id="ln" placeholder="Standard Blue Cut SV 1.56"/></div>
+        <div class="g2">
+          <div><label class="field-label">Type</label><select class="field-select" id="lt">${['SINGLE_VISION','BIFOCAL','PROGRESSIVE','READING'].map(t=>`<option value="${t}">${t.replace('_',' ')}</option>`).join('')}</select></div>
+          <div><label class="field-label">Index</label><select class="field-select" id="li">${['1.50','1.56','1.61','1.67','1.74'].map(i=>`<option value="${i}">${i}</option>`).join('')}</select></div>
+          <div><label class="field-label">Brand</label><input class="field-input" id="lb"/></div>
+          <div><label class="field-label">Stock</label><input class="field-input" id="lsq" type="number" value="100"/></div>
+          <div><label class="field-label">Purchase Price</label><input class="field-input" id="lpp" type="number"/></div>
+          <div><label class="field-label">Selling Price *</label><input class="field-input" id="lsp" type="number"/></div>
+        </div>
+      </div>
+      <div class="modal-foot"><button class="btn btn-secondary" onclick="this.closest('.overlay').remove()">Cancel</button><button class="btn btn-primary" onclick="saveLens()">Add Lens</button></div>
+    </div>
+  </div>`;
+}
+
+async function saveLens() {
+const name=document.getElementById(‘ln’).value, sp=document.getElementById(‘lsp’).value;
+if (!name||!sp) return toast(‘Name and price required’,‘error’);
+try {
+await post(’/lenses’,{name,lensType:document.getElementById(‘lt’).value,lensIndex:document.getElementById(‘li’).value,brand:document.getElementById(‘lb’).value,purchasePrice:document.getElementById(‘lpp’).value||null,sellingPrice:sp,stockQty:document.getElementById(‘lsq’).value||100});
+toast(‘Lens added!’);
+document.querySelector(’.overlay’)?.remove();
+loadLenses();
+} catch(e){ toast(e.message,‘error’); }
+}
+
+async function deleteLens(id) {
+if (!confirm(‘Delete?’)) return;
+try { await del(’/lenses/’+id); toast(‘Deleted’); loadLenses(); } catch(e){ toast(e.message,‘error’); }
+}
+
+// ── Billing ────────────────────────────────────────────
+let posState = {customer:null,cart:[],discount:0,advance:0,payMethod:‘CASH’};
+
+async function renderBilling() {
+posState = {customer:null,cart:[],discount:0,advance:0,payMethod:‘CASH’};
+renderShell(` <div class="page-header"><div><div class="page-title">Billing / POS</div><div class="page-sub">Quick billing at counter</div></div></div> <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px"> <div style="display:flex;flex-direction:column;gap:12px"> <div class="card" style="padding:16px"> <label class="field-label" style="margin-bottom:8px">Customer</label> <div id="pos-cust-area"> <div style="position:relative"> <input class="search-input" style="width:100%" placeholder="Search customer…" id="pos-csearch" oninput="posSearchCust(this.value)"/> <div id="pos-cust-dd"></div> </div> </div> </div> <div class="card" style="padding:16px"> <label class="field-label" style="margin-bottom:8px">Add Product</label> <input class="search-input" style="width:100%;margin-bottom:8px" placeholder="Search frames, lenses…" id="pos-psearch" oninput="posSearchProd(this.value)"/> <div id="pos-products" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;max-height:180px;overflow-y:auto"></div> </div> <div class="card" style="overflow:hidden" id="pos-cart-card"> <div style="padding:12px 16px;border-bottom:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center"> <span style="font-weight:700;font-size:13px">Cart (<span id="pos-cart-count">0</span>)</span> <button class="btn btn-danger btn-xs" onclick="posState.cart=[];renderPos()">Clear</button> </div> <div id="pos-cart"></div> </div> </div> <div id="pos-summary"></div> </div>`);
+posSearchProd(’’);
+renderPos();
+}
+
+async function posSearchCust(q) {
+if (!q) { document.getElementById(‘pos-cust-dd’).innerHTML=’’; return; }
+const data=(await get(’/customers?search=’+encodeURIComponent(q)+’&limit=6’)).data;
+document.getElementById(‘pos-cust-dd’).innerHTML=`<div style="position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #e2e8f0;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.1);z-index:20;margin-top:4px;overflow:hidden"> ${data.map(c=>`<div onclick=“posSelectCust(${JSON.stringify(c).replace(/”/g,’"’)})” style=“display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;border-bottom:1px solid #f8fafc” onmouseover=“this.style.background=’#f8fafc’” onmouseout=“this.style.background=’’”>
+<div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#8b5cf6);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:12px">${c.name[0]}</div>
+<div><div style="font-size:13px;font-weight:600">${escH(c.name)}</div><div style="font-size:11px;color:#94a3b8">${escH(c.phone)}</div></div>
+</div>`).join(’’)}
+
+  </div>`;
+}
+
+function posSelectCust(c) {
+posState.customer=c;
+document.getElementById(‘pos-csearch’).value=’’;
+document.getElementById(‘pos-cust-dd’).innerHTML=’’;
+document.getElementById(‘pos-cust-area’).innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:10px 14px">
+<div><div style="font-weight:600;color:#1e40af;font-size:13px">${escH(c.name)}</div><div style="font-size:12px;color:#3b82f6">${escH(c.phone)}</div></div>
+<button class="btn btn-xs btn-secondary" onclick="posState.customer=null;renderBilling()">Change</button>
+
+  </div>`;
+  renderPos();
+}
+
+async function posSearchProd(q) {
+const [fr,ln]= await Promise.all([get(’/frames?search=’+encodeURIComponent(q)+’&limit=8’),get(’/lenses?search=’+encodeURIComponent(q)+’&limit=6’)]);
+const prods=[…fr.data.map(f=>({…f,itemType:‘frame’,displayName:`${f.brand} ${f.model||''}`.trim()})),…ln.data.map(l=>({…l,itemType:‘lens’,displayName:l.name}))];
+document.getElementById(‘pos-products’).innerHTML=prods.map(p=>`
+
+  <div onclick="posAddToCart(${JSON.stringify(p).replace(/"/g,'&quot;')})" style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid #f1f5f9;border-radius:10px;cursor:pointer" onmouseover="this.style.borderColor='#bfdbfe';this.style.background='#f0f9ff'" onmouseout="this.style.borderColor='#f1f5f9';this.style.background=''">
+    <span style="font-size:20px">${p.itemType==='frame'?'👓':'🔬'}</span>
+    <div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escH(p.displayName)}</div><div style="font-size:11px;color:#2563eb;font-weight:600">${fmt(p.sellingPrice)}</div></div>
+  </div>`).join('');
+}
+
+function posAddToCart(item) {
+const ex=posState.cart.find(x=>x.id===item.id&&x.itemType===item.itemType);
+if(ex) ex.qty++;
+else posState.cart.push({…item,qty:1});
+renderPos();
+}
+
+function renderPos() {
+const {cart,discount,advance,payMethod} = posState;
+const sub=cart.reduce((s,x)=>s+x.sellingPrice*x.qty,0);
+const disc=Math.min(Number(discount)||0,sub), tax=(sub-disc)*.18, total=(sub-disc)+tax, bal=Math.max(0,total-(Number(advance)||0));
+document.getElementById(‘pos-cart-count’).textContent=cart.length;
+document.getElementById(‘pos-cart’).innerHTML=cart.length===0?’<div style="text-align:center;padding:24px;color:#94a3b8;font-size:13px">Add products above</div>’:`
+
+  <table class="tbl"><thead><tr><th>Item</th><th style="text-align:center">Qty</th><th style="text-align:right">Total</th><th></th></tr></thead><tbody>
+    ${cart.map((item,idx)=>`<tr>
+      <td style="font-weight:600;font-size:13px">${escH(item.displayName)}</td>
+      <td style="text-align:center"><div style="display:flex;align-items:center;justify-content:center;gap:8px">
+        <button class="btn btn-xs btn-secondary" onclick="posQty(${idx},-1)">−</button>
+        <span style="font-weight:700">${item.qty}</span>
+        <button class="btn btn-xs btn-secondary" onclick="posQty(${idx},1)">+</button>
+      </div></td>
+      <td style="text-align:right;font-weight:600;font-size:13px">${fmt(item.sellingPrice*item.qty)}</td>
+      <td><button class="btn btn-xs" style="color:#ef4444" onclick="posRemove(${idx})">✕</button></td>
+    </tr>`).join('')}
+  </tbody></table>`;
+  document.getElementById('pos-summary').innerHTML=`
+  <div class="card" style="padding:20px">
+    <div style="font-weight:700;font-size:14px;margin-bottom:16px">Payment Summary</div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div><label class="field-label">Discount ₹</label><input class="field-input" type="number" value="${discount}" oninput="posState.discount=this.value;renderPos()"/></div>
+      <div><label class="field-label">Payment</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
+          ${['CASH','UPI','CARD'].map(m=>`<button class="btn btn-sm ${payMethod===m?'btn-primary':'btn-secondary'}" onclick="posState.payMethod='${m}';renderPos()">${m==='CASH'?'💵':m==='UPI'?'📱':'💳'} ${m}</button>`).join('')}
+        </div>
+      </div>
+      <div><label class="field-label">Advance ₹</label><input class="field-input" type="number" value="${advance}" oninput="posState.advance=this.value;renderPos()"/></div>
+      <hr style="border:none;border-top:1px solid #f1f5f9"/>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:13px">
+        <div style="display:flex;justify-content:space-between;color:#64748b"><span>Subtotal</span><span>${fmt(sub)}</span></div>
+        ${disc>0?`<div style="display:flex;justify-content:space-between;color:#ef4444"><span>Discount</span><span>−${fmt(disc)}</span></div>`:''}
+        <div style="display:flex;justify-content:space-between;color:#64748b"><span>GST 18%</span><span>${fmt(tax)}</span></div>
+        <div style="display:flex;justify-content:space-between;font-weight:700;font-size:18px;border-top:1px solid #f1f5f9;padding-top:8px"><span>Total</span><span>${fmt(total)}</span></div>
+        ${bal>0?`<div style="display:flex;justify-content:space-between;color:#ef4444;font-weight:600"><span>Balance Due</span><span>${fmt(bal)}</span></div>`:''}
+      </div>
+      <button class="btn btn-primary" style="width:100%;padding:12px;font-size:14px;justify-content:center" onclick="posCheckout()" ${cart.length===0||!posState.customer?'disabled':''}>
+        🧾 Create Invoice ${cart.length>0?fmt(total):''}
+      </button>
+      ${!posState.customer?'<div style="background:#fffbeb;border:1px solid #fef3c7;border-radius:10px;padding:10px;font-size:12px;color:#92400e;text-align:center">👆 Select customer first</div>':''}
+    </div>
+  </div>`;
+}
+
+function posQty(idx,d) { posState.cart[idx].qty=Math.max(1,posState.cart[idx].qty+d); renderPos(); }
+function posRemove(idx) { posState.cart.splice(idx,1); renderPos(); }
+
+async function posCheckout() {
+const {customer,cart,discount,advance,payMethod}=posState;
+if(!customer||!cart.length) return;
+const sub=cart.reduce((s,x)=>s+x.sellingPrice*x.qty,0);
+const disc=Math.min(Number(discount)||0,sub), tax=(sub-disc)*.18, total=(sub-disc)+tax;
+const items=cart.map(x=>({itemType:x.itemType,frameId:x.itemType===‘frame’?x.id:null,lensId:x.itemType===‘lens’?x.id:null,name:x.displayName,quantity:x.qty,unitPrice:x.sellingPrice,totalPrice:x.sellingPrice*x.qty}));
+try {
+const r=await post(’/orders’,{customerId:customer.id,items,subtotal:sub,discountAmount:disc,taxAmount:tax,taxPct:18,totalAmount:total,advanceAmount:Number(advance)||0,paymentMethod:payMethod});
+toast(`Order ${r.data.orderNumber} created!`);
+navigate(‘orders’,r.data.id);
+} catch(e){ toast(e.message,‘error’); }
+}
+
+// ── Settings ───────────────────────────────────────────
+async function renderSettings() {
+renderShell(` <div class="page-header"><div><div class="page-title">Settings</div></div></div> <div class="tabs"><button class="tab active" id="st-store" onclick="switchSettTab('store')">🏪 Store</button><button class="tab" id="st-pw" onclick="switchSettTab('pw')">🔐 Password</button></div> <div id="sett-content" style="max-width:540px"></div>`);
+switchSettTab(‘store’);
+}
+
+async function switchSettTab(t) {
+[‘store’,‘pw’].forEach(x=>document.getElementById(‘st-’+x).className=‘tab’);
+document.getElementById(‘st-’+t).className=‘tab active’;
+if (t===‘store’) {
+try {
+const s=(await get(’/stores/current’)).data;
+document.getElementById(‘sett-content’).innerHTML=` <div class="card" style="padding:24px"> <div style="font-weight:700;font-size:14px;margin-bottom:16px">Store Information</div> <div class="g2"> <div style="grid-column:1/-1"><label class="field-label">Store Name</label><input class="field-input" id="sn" value="${escH(s.name||'')}"/></div> <div><label class="field-label">Phone</label><input class="field-input" id="sph" value="${escH(s.phone||'')}"/></div> <div><label class="field-label">Email</label><input class="field-input" id="sem" value="${escH(s.email||'')}"/></div> <div><label class="field-label">GST Number</label><input class="field-input" id="sgst" value="${escH(s.gstNumber||'')}"/></div> <div><label class="field-label">Tax Rate %</label><input class="field-input" id="stax" type="number" value="${s.taxRate||18}"/></div> <div style="grid-column:1/-1"><label class="field-label">Address</label><textarea class="field-input" id="saddr" rows="2">${escH(s.address||'')}</textarea></div> </div> <button class="btn btn-primary" style="margin-top:16px" onclick="saveSettings()">Save Settings</button> </div>`;
+} catch{ document.getElementById(‘sett-content’).innerHTML=’<div class="card" style="padding:40px;text-align:center;color:#94a3b8">🔒 Admin access required</div>’; }
+} else {
+document.getElementById(‘sett-content’).innerHTML=` <div class="card" style="padding:24px"> <div style="font-weight:700;font-size:14px;margin-bottom:16px">Change Password</div> <div style="display:flex;flex-direction:column;gap:14px"> <div><label class="field-label">Current Password</label><input class="field-input" id="pwc" type="password"/></div> <div><label class="field-label">New Password</label><input class="field-input" id="pwn" type="password"/></div> <div><label class="field-label">Confirm New Password</label><input class="field-input" id="pwcf" type="password"/></div> </div> <button class="btn btn-primary" style="margin-top:16px" onclick="changePassword()">Change Password</button> </div>`;
+}
+}
+
+async function saveSettings() {
+try {
+await put(’/stores/current’,{name:document.getElementById(‘sn’).value,phone:document.getElementById(‘sph’).value,email:document.getElementById(‘sem’).value,gstNumber:document.getElementById(‘sgst’).value,taxRate:Number(document.getElementById(‘stax’).value),address:document.getElementById(‘saddr’).value});
+toast(‘Settings saved!’);
+} catch(e){ toast(e.message,‘error’); }
+}
+
+async function changePassword() {
+const c=document.getElementById(‘pwc’).value, n=document.getElementById(‘pwn’).value, cf=document.getElementById(‘pwcf’).value;
+if(!c||!n) return toast(‘Fill all fields’,‘error’);
+if(n!==cf) return toast(‘Passwords do not match’,‘error’);
+try { await post(’/auth/change-password’,{currentPassword:c,newPassword:n}); toast(‘Password changed!’); document.getElementById(‘pwc’).value=document.getElementById(‘pwn’).value=document.getElementById(‘pwcf’).value=’’; }
+catch(e){ toast(e.message,‘error’); }
+}
+
+// ── Main Render ────────────────────────────────────────
+function render() {
+if (!authToken) { renderLogin(); return; }
+const p=currentPage, id=currentId;
+if (p===‘dashboard’)        renderDashboard();
+else if (p===‘customers’)   renderCustomers();
+else if (p===‘customer-detail’) renderCustomerDetail(id);
+else if (p===‘frames’)      renderFrames();
+else if (p===‘lenses’)      renderLenses();
+else if (p===‘orders’ && id===‘new’) renderNewOrder();
+else if (p===‘orders’ && id) renderOrderDetail(id);
+else if (p===‘orders’)      renderOrders();
+else if (p===‘billing’)     renderBilling();
+else if (p===‘inventory’)   renderInventory();
+else if (p===‘reports’)     renderReports();
+else if (p===‘settings’)    renderSettings();
+else renderDashboard();
+}
+
+render();
+</script>
+
+</body>
+</html>
